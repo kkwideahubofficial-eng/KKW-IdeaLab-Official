@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd innovate-hub-core && npm install && npm run build",
+  "outputDirectory": "innovate-hub-core/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
