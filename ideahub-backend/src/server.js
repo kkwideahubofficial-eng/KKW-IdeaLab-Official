@@ -44,6 +44,10 @@ dotenv.config();
 
 const app = express();
 
+// Trust reverse proxy (e.g. Render, Heroku, Cloudflare) so Express can correctly determine client IP
+// and express-rate-limit functions properly without throwing ERR_ERL_UNEXPECTED_X_FORWARDED_FOR
+app.set('trust proxy', 1);
+
 // Security Headers
 app.use(
   helmet({
@@ -58,6 +62,7 @@ const generalLimiter = rateLimit({
   max: 500,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   message: { message: 'Too many requests from this IP, please try again after 15 minutes.' },
 });
 
@@ -66,6 +71,7 @@ const authLimiter = rateLimit({
   max: 30,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
   message: { message: 'Too many authentication attempts, please try again later.' },
 });
 
@@ -138,7 +144,6 @@ app.use('/api/machines', machineRouter);
 app.use('/api/products', productRouter);
 app.use('/api/hero', heroRouter);
 app.use('/api/cart', cartRouter);
-app.use('/api/orders', orderRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/delivery', deliveryRouter);
 app.use('/api/room-permissions', roomPermissionRouter);
