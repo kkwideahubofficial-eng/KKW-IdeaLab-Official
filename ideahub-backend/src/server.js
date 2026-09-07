@@ -1,3 +1,12 @@
+import dns from 'node:dns';
+
+// Ensure SRV records and external services can resolve without timing out on Windows
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {
+  // Ignore fallback error
+}
+
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -261,7 +270,4 @@ start().catch((err) => {
 
 export default app;
 
-
-// Trigger restart
-
-// Trigger restart 2
+// Trigger restart 3

@@ -1,4 +1,12 @@
 import mongoose from 'mongoose';
+import dns from 'node:dns';
+
+// Ensure SRV records can be resolved properly across networks
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch {
+  // Ignore fallback error
+}
 
 export async function connectToDatabase(mongoUri) {
   if (!mongoUri) {
