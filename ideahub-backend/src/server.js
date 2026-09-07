@@ -191,6 +191,12 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 
 async function start() {
+  if (!process.env.MONGO_URI && !process.env.MONGODB_URI) {
+    console.warn('⚠️ WARNING: Neither MONGO_URI nor MONGODB_URI is set in process.env!');
+    console.warn('If running on Render, you MUST configure MONGO_URI under Environment Variables in the Render dashboard.');
+  }
+  const maskedUri = MONGO_URI.includes('@') ? MONGO_URI.replace(/:([^:@]+)@/, ':****@') : MONGO_URI;
+  console.log(`[Init] Connecting to MongoDB: ${maskedUri}`);
   await connectToDatabase(MONGO_URI);
   startEnterpriseEmailWorker();
   await seedSpecialRooms();
@@ -264,8 +270,10 @@ async function start() {
 
 start().catch((err) => {
   // eslint-disable-next-line no-console
-  console.error('Failed to start server:', err);
-  process.exit(1);
+  console.error('❌ Failed to start server:', err);
+  setTimeout(() => {
+    process.exit(1);
+  }, 1000);
 });
 
 export default app;

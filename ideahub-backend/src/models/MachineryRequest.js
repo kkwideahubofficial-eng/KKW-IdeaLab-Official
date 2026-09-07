@@ -393,7 +393,6 @@ const machineryRequestSchema = new Schema(
 // Indexes for query optimization
 machineryRequestSchema.index({ status: 1 });
 machineryRequestSchema.index({ status: 1, createdAt: -1 });
-machineryRequestSchema.index({ requestId: 1 }, { unique: true });
 machineryRequestSchema.index({ studentId: 1 });
 
 export const MachineryRequest = mongoose.models.MachineryRequest || mongoose.model('MachineryRequest', machineryRequestSchema);
