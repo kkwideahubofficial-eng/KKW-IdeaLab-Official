@@ -4,12 +4,17 @@ import cloudinary from '../config/cloudinary.js';
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'ideahub',
-    resource_type: 'auto',
-    transformation: [
-      { quality: 'auto:good', fetch_format: 'auto', width: 1920, height: 1080, crop: 'limit' }
-    ],
+  params: async (req, file) => {
+    const isImage = file.mimetype ? file.mimetype.startsWith('image/') : false;
+    return {
+      folder: 'ideahub',
+      resource_type: isImage ? 'image' : 'raw',
+      ...(isImage && {
+        transformation: [
+          { quality: 'auto:good', fetch_format: 'auto', width: 1920, height: 1080, crop: 'limit' }
+        ]
+      })
+    };
   },
 });
 

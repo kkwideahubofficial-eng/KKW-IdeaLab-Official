@@ -179,10 +179,23 @@ app.get(/.*/, (_req, res) => {
 // Global Error Handler
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
+  if (res.headersSent) {
+    return _next(err);
+  }
+
+  // Handle client abortion or network reset errors gracefully
+  if (err.code === 'ECONNRESET' || err.message?.includes('ECONNRESET')) {
+    console.warn('⚠️ Network connection was reset (ECONNRESET):', err.message);
+    return res.status(400).json({
+      message: 'Connection or file upload was interrupted. Please try again.',
+      error: err.message,
+    });
+  }
+
   // eslint-disable-next-line no-console
   console.error('Global Error Handler:', err);
-  res.status(500).json({
-    message: 'Internal Server Error',
+  res.status(err.status || 500).json({
+    message: err.message || 'Internal Server Error',
     error: err.message,
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
@@ -267,6 +280,9 @@ async function start() {
            console.log('Socket Disconnected:', socket.id);
       });
   });
+
+  httpServer.keepAliveTimeout = 65000;
+  httpServer.headersTimeout = 66000;
 
   httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`Server (HTTP+Socket) listening on 0.0.0.0:${PORT}`);

@@ -39,7 +39,7 @@ const AboutPlatform = () => {
 
     return (
         <section className="py-20 bg-background border-b border-border/40">
-            <div ref={sectionRef} className={`container mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)] transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-24'}`}>
+            <div ref={sectionRef} className={`container mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 [transition-timing-function:cubic-bezier(0.22,1,0.36,1)] transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-24'}`}>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                     {/* Visual Side */}
                     <div className="relative order-1 lg:order-1">

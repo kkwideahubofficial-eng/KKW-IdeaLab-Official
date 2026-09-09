@@ -580,15 +580,30 @@ const DevelopmentTeam: React.FC = () => {
           </div>
 
           {/* Grid of Faculty Guides */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div
+            className={`grid gap-5 sm:gap-6 ${
+              guideMembers.length === 1
+                ? "grid-cols-1 max-w-sm mx-auto"
+                : guideMembers.length === 2
+                ? "grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto"
+                : guideMembers.length === 3
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                : guideMembers.length % 3 === 0
+                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+            }`}
+          >
             {guideMembers.map((guide, idx) => {
               const style = getBadgeStyle(guide.badgeColor);
-              const BadgeIcon = style.IconComponent;
 
               return (
                 <div
                   key={guide._id}
-                  className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm text-center flex flex-col items-center justify-between space-y-3.5 hover:shadow-md transition-all relative group"
+                  className={`bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm text-center flex flex-col items-center justify-between space-y-3.5 hover:shadow-md transition-all relative group w-full ${
+                    guideMembers.length === 3 && idx === 2
+                      ? "sm:col-span-2 sm:max-w-md sm:mx-auto lg:col-span-1 lg:max-w-none lg:mx-0"
+                      : ""
+                  }`}
                 >
                   {isCoordinator && isManageMode && (
                     <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10 bg-white/90 rounded-lg p-1 shadow-xs border border-slate-200">
@@ -628,11 +643,11 @@ const DevelopmentTeam: React.FC = () => {
 
                   <div className="space-y-1.5 flex-1 flex flex-col justify-center">
                     <h4 className="font-bold text-sm sm:text-base text-slate-900">{guide.name}</h4>
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ${style.badgeBg}`}>
-                      <BadgeIcon className="w-3.5 h-3.5" /> {guide.tagline || guide.role}
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full border text-xs font-bold ${style.badgeBg}`}>
+                      {guide.tagline || guide.role}
                     </span>
                     {guide.description && (
-                      <p className="text-[11px] text-slate-500 mt-2 leading-relaxed max-w-[200px] mx-auto">
+                      <p className="text-[11px] text-slate-500 mt-2 leading-relaxed max-w-[260px] mx-auto">
                         {guide.description}
                       </p>
                     )}
